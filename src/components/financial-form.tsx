@@ -145,7 +145,7 @@ export function FinancialForm({ onSubmit }: FinancialFormProps) {
                     </div>
                   </FormControl>
                   <FormDescription>
-                    Any monthly income you'll have after quitting your job.
+                    Any monthly income you&apos;ll have after quitting your job.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

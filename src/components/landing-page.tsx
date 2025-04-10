@@ -47,7 +47,7 @@ export function LandingPage({ onStartTemporary, onStartComplete }: LandingPagePr
             </li>
             <li className="flex items-start">
               <span className="mr-2 text-green-500">✅</span>
-              <span>Explore "what if" scenarios</span>
+              <span>Explore &ldquo;what if&rdquo; scenarios</span>
             </li>
           </ul>
           <Button onClick={onStartTemporary} className="w-full py-2 text-base">

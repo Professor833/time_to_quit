@@ -124,8 +124,8 @@ export function calculateFinancialFreedomYears(
   let netWorth = currentNetWorth;
   let income = annualIncome;
   let expenses = annualExpenses;
-  let year = 0;
-  let freedomYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
+  let freedomYear = currentYear;
   let targetCorpus = 0;
   let yearsToFreedom = 0;
   let monthsRemaining = 0;
@@ -148,7 +148,7 @@ export function calculateFinancialFreedomYears(
     
     // Add this year to projections
     yearlyProjections.push({
-      year: new Date().getFullYear() + i,
+      year: currentYear + i,
       netWorth,
       targetCorpus,
       income,
@@ -162,7 +162,7 @@ export function calculateFinancialFreedomYears(
     // Check if we've reached financial freedom
     if (netWorth >= targetCorpus && yearsToFreedom === 0) {
       yearsToFreedom = i;
-      freedomYear = new Date().getFullYear() + i;
+      freedomYear = currentYear + i;
       finalCorpusNeeded = targetCorpus;
       
       // Calculate remaining months if we reached freedom mid-year
