@@ -2,68 +2,97 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 interface LandingPageProps {
-  onGetStarted: () => void;
+  onStartTemporary: () => void;
+  onStartComplete: () => void;
 }
 
-export function LandingPage({ onGetStarted }: LandingPageProps) {
+export function LandingPage({ onStartTemporary, onStartComplete }: LandingPageProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
+    <div className="h-full flex flex-col items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="space-y-6"
+        className="text-center mb-8"
       >
-        <div className="space-y-2">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter">
-            <span className="text-primary">Can I Quit?</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-[600px] mx-auto">
-            Find out when you can finally quit your job.
+        <h1 className="text-4xl md:text-6xl font-bold mb-3">Can I Quit?</h1>
+        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+          Calculate your financial freedom and plan your future
+        </p>
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+      >
+        <div className="bg-muted p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-3">Temporary Freedom</h2>
+          <p className="mb-4 text-muted-foreground text-base">
+            Calculate how long you can survive without a job based on your current savings and expenses.
           </p>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="py-4"
-        >
-          <div className="bg-muted p-6 rounded-lg max-w-[500px] mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Discover Your Freedom Timeline</h2>
-            <ul className="text-left space-y-3">
-              <li className="flex items-start">
-                <span className="mr-2 text-primary">💰</span>
-                <span>Calculate how long you can survive without a job</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2 text-primary">📈</span>
-                <span>Get your personal Freedom Score</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2 text-primary">🧮</span>
-                <span>Explore "What If" scenarios to plan your escape</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2 text-primary">🗓️</span>
-                <span>See your potential Quit Date</span>
-              </li>
-            </ul>
-          </div>
-        </motion.div>
-
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button 
-            onClick={onGetStarted} 
-            size="lg" 
-            className="text-lg px-8"
-          >
-            Start Now
+          <ul className="space-y-2 mb-5 text-sm">
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>See how many months you can survive</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Calculate your freedom score</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Visualize your savings burndown</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Explore "what if" scenarios</span>
+            </li>
+          </ul>
+          <Button onClick={onStartTemporary} className="w-full py-2 text-base">
+            Start Temporary Freedom Calculator
           </Button>
-        </motion.div>
+        </div>
+        
+        <div className="bg-muted p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-3">Complete Financial Freedom</h2>
+          <p className="mb-4 text-muted-foreground text-base">
+            Find out when you can stop working forever with passive income covering your expenses.
+          </p>
+          <ul className="space-y-2 mb-5 text-sm">
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Calculate years to financial independence</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Account for inflation and investment returns</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>See your required corpus size</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-green-500">✅</span>
+              <span>Explore lean lifestyle options</span>
+            </li>
+          </ul>
+          <Button onClick={onStartComplete} className="w-full py-2 text-base">
+            Start Complete Freedom Calculator
+          </Button>
+        </div>
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="text-center text-muted-foreground text-sm"
+      >
+        <p className="max-w-lg">
+          Take control of your financial future and discover when you can achieve freedom from the 9-to-5 grind.
+        </p>
       </motion.div>
     </div>
   );

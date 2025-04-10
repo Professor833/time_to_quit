@@ -81,3 +81,150 @@ export function calculateRequiredSavings(
   if (netMonthlyBurn <= 0) return 0; // If side income covers expenses
   return netMonthlyBurn * targetMonths;
 }
+
+// Financial Freedom Calculator Functions
+export function calculateFutureExpenses(
+  annualExpenses: number,
+  inflationRate: number,
+  years: number
+): number {
+  return annualExpenses * Math.pow(1 + inflationRate / 100, years);
+}
+
+export function calculateTargetCorpus(
+  futureAnnualExpenses: number,
+  withdrawalRate: number
+): number {
+  return futureAnnualExpenses / (withdrawalRate / 100);
+}
+
+export interface YearlyProjection {
+  year: number;
+  netWorth: number;
+  targetCorpus: number;
+  income: number;
+  expenses: number;
+  savings: number;
+}
+
+export function calculateFinancialFreedomYears(
+  currentNetWorth: number,
+  annualIncome: number,
+  annualExpenses: number,
+  incomeGrowthRate: number,
+  inflationRate: number,
+  investmentReturn: number,
+  withdrawalRate: number = 4
+): {
+  yearsToFreedom: number;
+  finalCorpusNeeded: number;
+  yearlyProjections: YearlyProjection[];
+  freedomYear: number;
+} {
+  let netWorth = currentNetWorth;
+  let income = annualIncome;
+  let expenses = annualExpenses;
+  let year = 0;
+  let freedomYear = new Date().getFullYear();
+  let targetCorpus = 0;
+  let yearsToFreedom = 0;
+  let monthsRemaining = 0;
+  let finalCorpusNeeded = 0;
+  const yearlyProjections: YearlyProjection[] = [];
+  
+  // Maximum 100 years to prevent infinite loops
+  for (let i = 0; i < 100; i++) {
+    // Calculate target corpus for this year
+    const futureExpenses = calculateFutureExpenses(annualExpenses, inflationRate, i);
+    targetCorpus = calculateTargetCorpus(futureExpenses, withdrawalRate);
+    
+    // Calculate this year's financials
+    income = i === 0 ? annualIncome : income * (1 + incomeGrowthRate / 100);
+    expenses = i === 0 ? annualExpenses : expenses * (1 + inflationRate / 100);
+    const savings = income - expenses;
+    
+    // Investment returns on existing net worth
+    const investmentGrowth = netWorth * (investmentReturn / 100);
+    
+    // Add this year to projections
+    yearlyProjections.push({
+      year: new Date().getFullYear() + i,
+      netWorth,
+      targetCorpus,
+      income,
+      expenses,
+      savings
+    });
+    
+    // Update net worth with investment returns and new savings
+    netWorth = netWorth + investmentGrowth + savings;
+    
+    // Check if we've reached financial freedom
+    if (netWorth >= targetCorpus && yearsToFreedom === 0) {
+      yearsToFreedom = i;
+      freedomYear = new Date().getFullYear() + i;
+      finalCorpusNeeded = targetCorpus;
+      
+      // Calculate remaining months if we reached freedom mid-year
+      if (i > 0) {
+        const prevYearNetWorth = yearlyProjections[i - 1].netWorth;
+        const netWorthGrowthForYear = netWorth - prevYearNetWorth;
+        const netWorthGrowthPerMonth = netWorthGrowthForYear / 12;
+        
+        // How many months did it take to reach the target from the previous year?
+        const netWorthGapFromPrevYear = targetCorpus - prevYearNetWorth;
+        monthsRemaining = Math.ceil(netWorthGapFromPrevYear / netWorthGrowthPerMonth);
+        
+        // Adjust if we calculated more than 12 months
+        if (monthsRemaining > 12) monthsRemaining = 0;
+      }
+    }
+    
+    // Continue for a few more years after reaching freedom to show projection
+    if (yearsToFreedom > 0 && i >= yearsToFreedom + 5) {
+      break;
+    }
+  }
+  
+  // If we never reached freedom in our simulation
+  if (yearsToFreedom === 0) {
+    yearsToFreedom = 100;
+    finalCorpusNeeded = targetCorpus;
+  }
+  
+  return {
+    yearsToFreedom: yearsToFreedom + (monthsRemaining / 12),
+    finalCorpusNeeded,
+    yearlyProjections,
+    freedomYear
+  };
+}
+
+export function formatYearsAndMonths(years: number): string {
+  const fullYears = Math.floor(years);
+  const months = Math.round((years - fullYears) * 12);
+  
+  if (years === Infinity || years > 100) {
+    return "Never";
+  }
+  
+  if (fullYears === 0) {
+    return `${months} month${months !== 1 ? 's' : ''}`;
+  }
+  
+  if (months === 0) {
+    return `${fullYears} year${fullYears !== 1 ? 's' : ''}`;
+  }
+  
+  return `${fullYears} year${fullYears !== 1 ? 's' : ''}, ${months} month${months !== 1 ? 's' : ''}`;
+}
+
+export function formatCrores(amount: number): string {
+  if (amount >= 10000000) {
+    return `${(amount / 10000000).toFixed(2)} crore`;
+  } else if (amount >= 100000) {
+    return `${(amount / 100000).toFixed(2)} lakh`;
+  } else {
+    return formatCurrency(amount);
+  }
+}
