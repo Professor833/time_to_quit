@@ -10,6 +10,7 @@ import {
   formatCurrency
 } from "@/lib/utils";
 import type { FreedomCalculatorFormValues } from "./freedom-calculator-form";
+import { trackWhatIfScenario } from "@/lib/analytics";
 
 interface FreedomCalculatorResultsProps {
   financialData: FreedomCalculatorFormValues;
@@ -67,6 +68,7 @@ export function FreedomCalculatorResults({ financialData, onAdjust }: FreedomCal
   // Handle slider changes for savings rate
   const handleSavingsRateChange = (value: number) => {
     const newExpenses = adjustedData.annualIncome * (1 - value / 100);
+    trackWhatIfScenario("savings_rate", currentSavingsRate, value);
     setAdjustedData(prev => ({
       ...prev,
       annualExpenses: newExpenses
