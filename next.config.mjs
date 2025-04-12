@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  // Configure for GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '/canIQuit' : '',
   images: {
     unoptimized: true,
   },
+  // Remove basePath for proper static export
+  // basePath: process.env.NODE_ENV === 'production' ? '/canIQuit' : '',
 };
 
 export default nextConfig;

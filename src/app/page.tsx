@@ -8,6 +8,7 @@ import { FreedomCalculatorForm, type FreedomCalculatorFormValues } from "@/compo
 import { FreedomCalculatorResults } from "@/components/freedom-calculator-results";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
+import { trackPageView, trackCalculatorUse, trackResultsViewed } from "@/lib/analytics";
 
 type CalculatorType = "temporary" | "complete";
 type Step = "landing" | "form" | "results";
@@ -33,19 +34,26 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    trackPageView(window.location.pathname);
+  }, []);
+
   const handleStartTemporary = () => {
     setCalculatorType("temporary");
     setCurrentStep("form");
+    trackCalculatorUse("temporary");
   };
 
   const handleStartComplete = () => {
     setCalculatorType("complete");
     setCurrentStep("form");
+    trackCalculatorUse("complete");
   };
 
   const handleTemporaryFormSubmit = (data: FinancialFormValues) => {
     setTemporaryData(data);
     setCurrentStep("results");
+    trackResultsViewed("temporary", data);
     
     // Save to localStorage for persistence
     localStorage.setItem("temporaryData", JSON.stringify(data));
@@ -54,6 +62,7 @@ export default function Home() {
   const handleCompleteFormSubmit = (data: FreedomCalculatorFormValues) => {
     setCompleteData(data);
     setCurrentStep("results");
+    trackResultsViewed("complete", data);
     
     // Save to localStorage for persistence
     localStorage.setItem("completeData", JSON.stringify(data));
